@@ -2,7 +2,6 @@
 
 require 'json'
 require 'net/http'
-require 'colorize'
 
 PROJECTS        = Hash[*(`echo $GLPL_PROJECT_IDS`.strip().split(",").map { |p| p.split(":")}).flatten]
 STATUS_COLORS   = {"success": :green, "failed": :red, "running": :yellow}
@@ -33,9 +32,9 @@ def jobs(pipeline_id)
   for job in jobs do
     puts sprintf(
       "%s %s %s",
-      job["name"].to_s.colorize(:blue).ljust(50),
+      job["name"].ljust(50),
       job["user"]["username"].ljust(10),
-      job["status"].colorize(STATUS_COLORS[job["status"].to_sym]).ljust(10))
+      job["status"].ljust(10))
   end
 end
 
@@ -49,8 +48,8 @@ pipelines = request("/pipelines", :get)
 for pipeline in pipelines do
   puts sprintf(
     "%s %s %s",
-    pipeline["id"].to_s.colorize(:blue).ljust(10),
-    pipeline["ref"].ljust(50),
-    pipeline["status"].colorize(STATUS_COLORS[pipeline["status"].to_sym]).ljust(10))
+    pipeline["id"].to_s.ljust(10),
+    pipeline["ref"].ljust(70),
+    pipeline["status"].ljust(10))
 end
 
