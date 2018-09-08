@@ -4,18 +4,12 @@ require 'json'
 require 'net/http'
 require 'colorize'
 
-PROJECTS          = Hash[*(`echo $GLPL_PROJECT_IDS`.strip().split(",").map { |p| p.split(":")}).flatten]
 ATTRIBUTE_COLORS  = {success: :green, failed: :red, running: :yellow, id: :blue}
 METHOD_CLASSES    = {get: Net::HTTP::Get, post: Net::HTTP::Post}
-API_URL           = "https://gitlab.com/api/v4/projects/4677522"
 PRIVATE_TOKEN     = `echo $GITLAB_PRIVATE_TOKEN`.strip()
 COLORS            = ARGV.include? "--colors"
 
-
-if PRIVATE_TOKEN == "" then
-  puts "Gitlab's Private Token is not set. Please set it to $GITLAB_PRIVATE_TOKEN.".colorize(:red)
-  exit
-end
+# --- FUNCTIONS
 
 class String
   def colorize_attribute(attribute)
@@ -45,6 +39,25 @@ def jobs(pipeline_id)
       job["user"]["username"].ljust(10),
       job["status"].colorize_attribute(job["status"].to_sym).ljust(10))
   end
+end
+
+def project_id
+  return PROJECTS[PROJECT]
+end
+
+# --- SCRIPT
+
+if PRIVATE_TOKEN == "" then
+  puts "Gitlab's Private Token is not set. Please set it to $GITLAB_PRIVATE_TOKEN.".colorize(:red)
+  exit
+end
+
+unless ARGV[0]
+  puts "You must specify a project name using: $ glpl [PROJECT_NAME]"
+  exit
+else
+  PROJECTS  = Hash[*(`echo $GLPL_PROJECT_IDS`.strip().split(",").map { |p| p.split(":")}).flatten]
+  API_URL   = "https://gitlab.com/api/v4/projects/#{PROJECTS[ARGV[0]]}"
 end
 
 if ARGV[0] == "jobs" then
