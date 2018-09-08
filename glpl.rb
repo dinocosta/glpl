@@ -2,16 +2,25 @@
 
 require 'json'
 require 'net/http'
+require 'colorize'
 
-PROJECTS        = Hash[*(`echo $GLPL_PROJECT_IDS`.strip().split(",").map { |p| p.split(":")}).flatten]
-STATUS_COLORS   = {"success": :green, "failed": :red, "running": :yellow}
-METHOD_CLASSES  = {get: Net::HTTP::Get, post: Net::HTTP::Post}
-API_URL         = "https://gitlab.com/api/v4/projects/4677522"
-PRIVATE_TOKEN   = `echo $GITLAB_PRIVATE_TOKEN`.strip()
+PROJECTS          = Hash[*(`echo $GLPL_PROJECT_IDS`.strip().split(",").map { |p| p.split(":")}).flatten]
+ATTRIBUTE_COLORS  = {success: :green, failed: :red, running: :yellow, id: :blue}
+METHOD_CLASSES    = {get: Net::HTTP::Get, post: Net::HTTP::Post}
+API_URL           = "https://gitlab.com/api/v4/projects/4677522"
+PRIVATE_TOKEN     = `echo $GITLAB_PRIVATE_TOKEN`.strip()
+COLORS            = ARGV.include? "--colors"
+
 
 if PRIVATE_TOKEN == "" then
   puts "Gitlab's Private Token is not set. Please set it to $GITLAB_PRIVATE_TOKEN.".colorize(:red)
   exit
+end
+
+class String
+  def colorize_attribute(attribute)
+    if COLORS then return colorize(ATTRIBUTE_COLORS[attribute]) else return colorize(:nil) end
+  end
 end
 
 def request(endpoint, method)
@@ -32,9 +41,9 @@ def jobs(pipeline_id)
   for job in jobs do
     puts sprintf(
       "%s %s %s",
-      job["name"].ljust(50),
+      job["name"].colorize_attribute(:name).ljust(50),
       job["user"]["username"].ljust(10),
-      job["status"].ljust(10))
+      job["status"].colorize_attribute(job["status"].to_sym).ljust(10))
   end
 end
 
@@ -48,8 +57,8 @@ pipelines = request("/pipelines", :get)
 for pipeline in pipelines do
   puts sprintf(
     "%s %s %s",
-    pipeline["id"].to_s.ljust(10),
+    pipeline["id"].to_s.colorize_attribute(:id).ljust(10),
     pipeline["ref"].ljust(70),
-    pipeline["status"].ljust(10))
+    pipeline["status"].colorize_attribute(pipeline["status"].to_sym).ljust(10))
 end
 
