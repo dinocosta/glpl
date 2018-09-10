@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'glpl'
+
+private_token = `echo $GITLAB_PRIVATE_TOKEN`.strip()
+if private_token == "" then
+  puts "Gitlab's Private Token is not defined. Export it to $GITLAB_PRIVATE_TOKEN."
+  exit
+end
+
+if ARGV.length == 0 then
+  puts "Project is not specified. Please specify the project using: $ glpl [PROJECT]."
+  exit
+end
+
+match = /#{ARGV[1]}:(?<id>[0-9]+)/.match(`echo $GLPL_PROJECT_IDS`)
+if match == nil then
+  puts "Project ID is not defined for #{ARGV[1]}. Please update $GLPL_PROJECT_IDS."
+  exit
+end
+project_id = match.captures[0]
+
+glpl = GLPL.new(private_token)
+for pipeline in glpl.pipelines(project_id) do
+  printf("%s %s %s\n",
+    pipeline["id"].to_s.ljust(10),
+    pipeline["ref"].ljust(60),
+    pipeline["status"].ljust(10)
+  )
+end
