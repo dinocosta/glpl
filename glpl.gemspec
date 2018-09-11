@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name        = 'glpl'
-  spec.version     = '0.0.1'
+  spec.version     = '0.0.0'
   spec.date        = Time.now.strftime("%Y-%m-%d")
   spec.summary     = "Gitlab Pipelines on your command line."
   spec.description = "Gitlab Pipelines on your command line."
