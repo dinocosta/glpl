@@ -8,7 +8,7 @@ METHOD_CLASSES    = {get: Net::HTTP::Get, post: Net::HTTP::Post}
 # --- FUNCTIONS
 
 class GLPL
-  @@api_url = "https://gitlab.com/api/v4/projects"
+  @api_url = "https://gitlab.com/api/v4/projects"
 
   ##
   # Creates a new GLPL instance with the provided Gitlab's Private Token.
