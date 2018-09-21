@@ -8,6 +8,7 @@ METHOD_CLASSES    = {get: Net::HTTP::Get, post: Net::HTTP::Post}
 # --- FUNCTIONS
 
 class GLPL
+  @api_url = "https://gitlab.com/api/v4/projects"
 
   ##
   # Creates a new GLPL instance with the provided Gitlab's Private Token.
@@ -15,20 +16,14 @@ class GLPL
   # Params:
   # +private_token+:: +String+ Gitlab's Private Token to be used when making requests to Gitlab's API.
   def initialize(private_token)
-    @@private_token = `echo $GITLAB_PRIVATE_TOKEN`.strip()
-    @@api_url       = "https://gitlab.com/api/v4/projects"
-
-    if @@private_token == "" then
-      raise ArgumentError.new("Gitlab Private's Token is not set. Export it to $GITLAB_PRIVATE_TOKEN.")
-    end
-
+    @private_token = private_token
   end
 
   # Prints the pipelines status for a given project.
   # Params:
   # +project_id+:: +String+ which contains the Gitlab's project id.
   def pipelines(project_id)
-    pipelines = request("/#{project_id}/pipelines", :get)
+    request("/#{project_id}/pipelines", :get)
   end
 
   # Makes an HTTP Requests to Gitlab's API and returns the response as JSON.
@@ -40,7 +35,7 @@ class GLPL
 
     Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
       request                   = METHOD_CLASSES[method].new(uri)
-      request["PRIVATE-TOKEN"]  = @@private_token
+      request["PRIVATE-TOKEN"]  = @private_token
       response                  = http.request(request)
 
       return JSON.parse(response.body)
