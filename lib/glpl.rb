@@ -15,12 +15,19 @@ class GLPL
     @private_token = private_token
     @api_url = "https://gitlab.com/api/v4/projects"
   end
-
-  # Prints the pipelines status for a given project.
+  # List recent pipelines for a given project.
   # Params:
   # +project_id+:: +String+ which contains the Gitlab's project id.
   def pipelines(project_id)
     request("/#{project_id}/pipelines", :get).map { |data| GLPL::Pipeline.new(data) }
+  end
+
+  # List jobs for a given project's pipeline.
+  # Params:
+  # +project_id+:: +String+ Gitlab's project ID.
+  # +pipeline_id+:: +String+ The pipeline's ID.
+  def jobs(project_id, pipeline_id)
+    request("/#{project_id}/pipelines/#{pipeline_id}/jobs", :get).map { |data| GLPL::Job.new(data) }
   end
 
   # Makes an HTTP Requests to Gitlab's API and returns the response as JSON.
@@ -43,3 +50,4 @@ class GLPL
 end
 
 require 'glpl/pipeline'
+require 'glpl/job'
