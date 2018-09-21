@@ -31,7 +31,7 @@ class GLPL
   # +endpoint+:: +String+ which represents the API's endpoint to be contacted.
   # +method+:: +Symbol+ of the HTTP method, either :get or :post.
   def request(endpoint, method)
-    uri     = URI("#{@@api_url}#{endpoint}")
+    uri     = URI("#{@api_url}#{endpoint}")
 
     Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
       request                   = METHOD_CLASSES[method].new(uri)
