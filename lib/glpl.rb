@@ -1,5 +1,3 @@
-#!/Users/joaocosta/.rvm/rubies/ruby-2.2.1/bin/ruby
-
 require 'json'
 require 'net/http'
 
@@ -8,8 +6,6 @@ METHOD_CLASSES    = {get: Net::HTTP::Get, post: Net::HTTP::Post}
 # --- FUNCTIONS
 
 class GLPL
-  @api_url = "https://gitlab.com/api/v4/projects"
-
   ##
   # Creates a new GLPL instance with the provided Gitlab's Private Token.
   #
@@ -17,13 +13,14 @@ class GLPL
   # +private_token+:: +String+ Gitlab's Private Token to be used when making requests to Gitlab's API.
   def initialize(private_token)
     @private_token = private_token
+    @api_url = "https://gitlab.com/api/v4/projects"
   end
 
   # Prints the pipelines status for a given project.
   # Params:
   # +project_id+:: +String+ which contains the Gitlab's project id.
   def pipelines(project_id)
-    request("/#{project_id}/pipelines", :get)
+    request("/#{project_id}/pipelines", :get).map { |data| GLPL::Pipeline.new(data) }
   end
 
   # Makes an HTTP Requests to Gitlab's API and returns the response as JSON.
@@ -31,7 +28,7 @@ class GLPL
   # +endpoint+:: +String+ which represents the API's endpoint to be contacted.
   # +method+:: +Symbol+ of the HTTP method, either :get or :post.
   def request(endpoint, method)
-    uri     = URI("#{@@api_url}#{endpoint}")
+    uri     = URI("#{@api_url}#{endpoint}")
 
     Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
       request                   = METHOD_CLASSES[method].new(uri)
@@ -44,3 +41,5 @@ class GLPL
 
   private :request
 end
+
+require 'glpl/pipeline'

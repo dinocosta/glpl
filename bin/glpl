@@ -23,8 +23,8 @@ project_id = match.captures[0]
 glpl = GLPL.new(private_token)
 for pipeline in glpl.pipelines(project_id) do
   printf("%s %s %s\n",
-    pipeline["id"].to_s.ljust(10),
-    pipeline["ref"].ljust(60),
-    pipeline["status"].ljust(10)
+    pipeline.id.to_s.ljust(10),
+    pipeline.ref.ljust(60),
+    pipeline.status.ljust(10)
   )
 end
