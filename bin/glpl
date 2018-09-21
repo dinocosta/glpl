@@ -13,18 +13,31 @@ if ARGV.length == 0 then
   exit
 end
 
-match = /#{ARGV[1]}:(?<id>[0-9]+)/.match(`echo $GLPL_PROJECT_IDS`)
+match = /#{ARGV[0]}:(?<id>[0-9]+)/.match(`echo $GLPL_PROJECT_IDS`)
 if match == nil then
-  puts "Project ID is not defined for #{ARGV[1]}. Please update $GLPL_PROJECT_IDS."
+  puts "Project ID is not defined for #{ARGV[0]}. Please update $GLPL_PROJECT_IDS."
   exit
 end
 project_id = match.captures[0]
 
 glpl = GLPL.new(private_token)
-for pipeline in glpl.pipelines(project_id) do
-  printf("%s %s %s\n",
-    pipeline.id.to_s.ljust(10),
-    pipeline.ref.ljust(60),
-    pipeline.status.ljust(10)
-  )
+
+if ARGV[1] == "jobs" then
+  pipeline_id = ARGV[2]
+
+  for job in glpl.jobs(project_id, pipeline_id) do
+    printf("%s %s %s\n",
+      job.id.to_s.ljust(10),
+      job.name.ljust(60),
+      job.status.ljust(10)
+    )
+  end
+else
+  for pipeline in glpl.pipelines(project_id) do
+    printf("%s %s %s\n",
+      pipeline.id.to_s.ljust(10),
+      pipeline.ref.ljust(60),
+      pipeline.status.ljust(10)
+    )
+  end
 end
