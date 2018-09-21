@@ -23,7 +23,7 @@ class GLPL
   # Params:
   # +project_id+:: +String+ which contains the Gitlab's project id.
   def pipelines(project_id)
-    pipelines = request("/#{project_id}/pipelines", :get)
+    request("/#{project_id}/pipelines", :get)
   end
 
   # Makes an HTTP Requests to Gitlab's API and returns the response as JSON.
