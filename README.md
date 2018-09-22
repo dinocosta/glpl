@@ -1,5 +1,6 @@
 # GLPL: Gitlab Pipelines
 
+[![Gem Version](https://badge.fury.io/rb/glpl.svg)](https://badge.fury.io/rb/glpl)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b88745d71e95457d992e36ef08dbaef4)](https://app.codacy.com/app/joaofcosta/glpl?utm_source=github.com&utm_medium=referral&utm_content=joaofcosta/glpl&utm_campaign=Badge_Grade_Dashboard)
 
 GLPL is a tool to display and manipulate Gitlab pipelines from your command line.
