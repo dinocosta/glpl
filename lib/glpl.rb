@@ -17,15 +17,15 @@ class GLPL
   end
   # List recent pipelines for a given project.
   # Params:
-  # +project_id+:: +String+ which contains the Gitlab's project id.
+  # +project_id+:: +Integer+ which contains the Gitlab's project id.
   def pipelines(project_id)
     request("/#{project_id}/pipelines", :get).map { |data| GLPL::Pipeline.new(data) }
   end
 
   # List jobs for a given project's pipeline.
   # Params:
-  # +project_id+:: +String+ Gitlab's project ID.
-  # +pipeline_id+:: +String+ The pipeline's ID.
+  # +project_id+:: +Integer+ Gitlab's project ID.
+  # +pipeline_id+:: +Integer+ The pipeline's ID.
   def jobs(project_id, pipeline_id)
     request("/#{project_id}/pipelines/#{pipeline_id}/jobs", :get).map { |data| GLPL::Job.new(data) }
   end
