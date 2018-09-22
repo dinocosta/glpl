@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require 'glpl'
 
 private_token = `echo $GITLAB_PRIVATE_TOKEN`.strip()
@@ -20,24 +21,32 @@ if match == nil then
 end
 project_id = match.captures[0]
 
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: glpl [PROJECT_NAME] [options]"
+
+  opts.on("-p", "--pipeline ID", Integer, "Pipeline ID") do |pipeline_id|
+    options[:pipeline_id] = pipeline_id
+  end
+end.parse!
+
 glpl = GLPL.new(private_token)
 
-if ARGV[1] == "jobs" then
-  pipeline_id = ARGV[2]
-
-  for job in glpl.jobs(project_id, pipeline_id) do
+if options.key?(:pipeline_id) then
+  for job in glpl.jobs(project_id, options[:pipeline_id]) do
     printf("%s %s %s\n",
       job.id.to_s.ljust(10),
       job.name.ljust(60),
       job.status.ljust(10)
     )
   end
-else
-  for pipeline in glpl.pipelines(project_id) do
-    printf("%s %s %s\n",
-      pipeline.id.to_s.ljust(10),
-      pipeline.ref.ljust(60),
-      pipeline.status.ljust(10)
-    )
-  end
+  exit
+end
+
+for pipeline in glpl.pipelines(project_id) do
+  printf("%s %s %s\n",
+    pipeline.id.to_s.ljust(10),
+    pipeline.ref.ljust(60),
+    pipeline.status.ljust(10)
+  )
 end
