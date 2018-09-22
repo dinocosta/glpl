@@ -15,17 +15,17 @@ What follows is a list of steps to help you get the command line tool up and run
 	```
 	export GITLAB_PRIVATE_TOKEN="[PRIVATE_TOKEN]"
 	```
-	
-2. In order for `GLPL` to check your project's pipelines it needs to know the project's id. 
+
+2. In order for `GLPL` to check your project's pipelines it needs to know the project's id.
 
 	Look at [this example](https://i.imgur.com/R6zQ1Es.png) to find your project ID and then export an environment variable named `GLPL_PROJECT_IDS` with the following pattern:
 
 	```
 	export GLPL_PROJECT_IDS="[PROJECT1_NAME]:[PROJECT1_ID],[PROJECT2_NAME]:[PROJECT2_ID],..."
 	```
-	
+
 	Example:
-	
+
 	```
 	export GLPL_PROJECT_IDS="glpl:8283313,migration:4467622"
 	```
@@ -39,9 +39,9 @@ Here are the commands you need to run in order to execute multiple functions usi
 	```
 	glpl [PROJECT_NAME]
 	```
-	
+
 * Listing pipeline jobs
 
 	```
-	glpl [PROJECT_NAME] jobs [PIPELINE_ID]
-	``` 
+	glpl [PROJECT_NAME] -p [PIPELINE_ID]
+	```
