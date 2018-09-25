@@ -24,7 +24,7 @@ jobs:
           name: run tests
           command: |
             mkdir /tmp/test
-            rake test > /tmp/test-results
+            rspec --format doc > /tmp/test-results
       # collect reports
       - store_test_results:
           path: /tmp/test-results
