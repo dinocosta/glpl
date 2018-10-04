@@ -1,2 +1,5 @@
 # doc folder.
 doc/
+
+# simplecov folder.
+coverage/
