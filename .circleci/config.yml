@@ -24,3 +24,6 @@ jobs:
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
+      - store_coverage:
+          path: /coverage
+          destination: test-results
