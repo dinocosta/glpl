@@ -17,13 +17,12 @@ jobs:
           name: Run tests
           command: |
             mkdir /tmp/test
-            bin/rspec --format doc > /tmp/test-results
+            bin/rspec --format doc > /tmp/rspec
+            cp -R coverage /tmp/coverage
       # collect reports
-      - store_test_results:
-          path: /tmp/test-results
       - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
-      - store_coverage:
-          path: /coverage
-          destination: test-results
+          path: /tmp/rspec
+          destination: rspec
+      - store_artifacts:
+          path: /tmp/coverage
+          destination: coverage
