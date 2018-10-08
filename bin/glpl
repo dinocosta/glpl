@@ -28,9 +28,20 @@ OptionParser.new do |opts|
   opts.on("-p", "--pipeline ID", Integer, "Pipeline ID") do |pipeline_id|
     options[:pipeline_id] = pipeline_id
   end
+
+  opts.on("-r", "--retry ID", "Retry a given pipeline") do |pipeline_id|
+    options[:pipeline_id] = pipeline_id
+    options[:retry] = true
+  end
 end.parse!
 
 glpl = GLPL.new(private_token)
+
+if options.key?(:retry) then
+  glpl.retry(project_id, options[:pipeline_id])
+  printf("Sucessfully retried Pipeline#%s.\n", options[:pipeline_id])
+  exit
+end
 
 if options.key?(:pipeline_id) then
   for job in glpl.jobs(project_id, options[:pipeline_id]) do
