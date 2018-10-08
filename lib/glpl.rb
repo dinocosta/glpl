@@ -30,6 +30,14 @@ class GLPL
     request("/#{project_id}/pipelines/#{pipeline_id}/jobs", :get).map { |data| GLPL::Job.new(data) }
   end
 
+  # Retries a pipeline.
+  # Params:
+  # +project_id+:: +Integer+ Gitlab's project ID.
+  # +pipeline_id+:: +Integer+ The pipeline's ID.
+  def retry(project_id, pipeline_id)
+    GLPL::Pipeline.new(request("/#{project_id}/pipelines/#{pipeline_id}/retry", :post))
+  end
+
   # Makes an HTTP Requests to Gitlab's API and returns the response as JSON.
   # Params:
   # +endpoint+:: +String+ which represents the API's endpoint to be contacted.
