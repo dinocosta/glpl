@@ -47,3 +47,9 @@ Here are the commands you need to run in order to execute multiple functions usi
 	```
 	glpl [PROJECT_NAME] -p [PIPELINE_ID]
 	```
+
+* Retrying a pipeline
+
+  ```
+  glpl [PROJECT_NAME] -r [PIPELINE_ID]
+  ```
