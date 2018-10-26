@@ -6,6 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.0]() - 2018-10-27
+## [0.2.0](https://github.com/joaofcosta/glpl/releases/tag/0.2.0) - 2018-10-27
 ### Added
 * Ability to cancel pipelines.
