@@ -41,7 +41,13 @@ OptionParser.new do |opts|
 
   opts.on("-r", "--retry ID", "Retry a given pipeline") do |pipeline_id|
     glpl.retry(project_id, pipeline_id)
-    printf("Sucessfully retried Pipeline#%s.\n", options[:pipeline_id])
+    printf("Sucessfully retried Pipeline#%s.\n", pipeline_id)
+    exit
+  end
+
+  opts.on("-c", "--cancel ID", "Cancel a given pipeline") do |pipeline_id|
+    glpl.cancel(project_id, pipeline_id)
+    printf("Sucessfully canceled Pipeline#%s.\n", pipeline_id)
     exit
   end
 end.parse!
