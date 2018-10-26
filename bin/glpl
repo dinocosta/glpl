@@ -3,11 +3,14 @@
 require 'optparse'
 require 'glpl'
 
+# Initialize Gitlab's Private Token.
 private_token = `echo $GITLAB_PRIVATE_TOKEN`.strip()
 if private_token == "" then
   puts "Gitlab's Private Token is not defined. Export it to $GITLAB_PRIVATE_TOKEN."
   exit
 end
+
+glpl = GLPL.new(private_token)
 
 if ARGV.length == 0 then
   puts "Project is not specified. Please specify the project using: $ glpl [PROJECT]."
@@ -26,33 +29,22 @@ OptionParser.new do |opts|
   opts.banner = "Usage: glpl [PROJECT_NAME] [options]"
 
   opts.on("-p", "--pipeline ID", Integer, "Pipeline ID") do |pipeline_id|
-    options[:pipeline_id] = pipeline_id
+    for job in glpl.jobs(project_id, pipeline_id) do
+      printf("%s %s %s\n",
+        job.id.to_s.ljust(10),
+        job.name.ljust(60),
+        job.status.ljust(10)
+      )
+    end
+    exit
   end
 
   opts.on("-r", "--retry ID", "Retry a given pipeline") do |pipeline_id|
-    options[:pipeline_id] = pipeline_id
-    options[:retry] = true
+    glpl.retry(project_id, pipeline_id)
+    printf("Sucessfully retried Pipeline#%s.\n", options[:pipeline_id])
+    exit
   end
 end.parse!
-
-glpl = GLPL.new(private_token)
-
-if options.key?(:retry) then
-  glpl.retry(project_id, options[:pipeline_id])
-  printf("Sucessfully retried Pipeline#%s.\n", options[:pipeline_id])
-  exit
-end
-
-if options.key?(:pipeline_id) then
-  for job in glpl.jobs(project_id, options[:pipeline_id]) do
-    printf("%s %s %s\n",
-      job.id.to_s.ljust(10),
-      job.name.ljust(60),
-      job.status.ljust(10)
-    )
-  end
-  exit
-end
 
 for pipeline in glpl.pipelines(project_id) do
   printf("%s %s %s\n",

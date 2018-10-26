@@ -3,3 +3,6 @@ doc/
 
 # simplecov folder.
 coverage/
+
+# Ignore built .gem file.
+*.gem
